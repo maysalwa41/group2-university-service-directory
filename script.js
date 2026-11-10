@@ -64,7 +64,7 @@ function showDirections(id) {
   if (s) $("dest").value = s.id;
 }
 
-// ===== Form validation with visible feedback =====
+
 function validateField(field) {
   const valid = field.checkValidity();
   $(`${field.id}-error`).textContent = valid ? "" : field.dataset.error;

@@ -1,53 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>University Service Directory</title>
+  <meta name="description" content="Muni University service directory and campus guide.">
+  <title>Muni University Service Directory</title>
   <link rel="stylesheet" href="style.css">
 </head>
+<body>
+  <a class="skip" href="#main-content">Skip to content</a>
 
-<body>  
   <header class="site-header">
-    <img src="University Logo.png" alt="University-Logo" class="university-Logo" width="200" height="200">
-    <h1>University Service Directory</h1>
-    <nav aria-label="Main">
+    <a class="brand" href="index.html" aria-label="Muni University home">
+      <img src="University Logo.png" alt="Muni University logo" class="university-logo">
+      <span class="site-title">Muni University Service Directory</span>
+    </a>
+    <nav aria-label="Main navigation">
       <a href="#directory">Find a service</a>
       <a href="#directions">Directions</a>
-      <a href="#feedback">Report wrong information</a>
+      <a href="#feedback">Report information</a>
     </nav>
   </header>
 
-  <main>
-    <!-- Section 1: searchable directory -->
+  <main id="main-content">
+    <section class="intro" aria-labelledby="welcome-heading">
+      <p class="eyebrow">Welcome to Muni University</p>
+      <h1 id="welcome-heading" class="site-heading">Find the help you need on campus</h1>
+      <p>Search university services, check their opening status and get directions to the right office.</p>
+    </section>
+
     <section id="directory" aria-labelledby="dir-h">
-      <h2 id="dir-h">Find a service</h2>
+      <div class="section-heading">
+        <p class="eyebrow">University services</p>
+        <h2 id="dir-h" class="site-heading">Find a service</h2>
+        <p>Search by office name, service or keyword, or filter by the type of help you need.</p>
+      </div>
       <div class="filters">
         <div class="field">
           <label for="search">Search by service name or keyword</label>
           <input type="search" id="search" placeholder="For example: fees, transcript, clinic">
         </div>
         <div class="field">
-          <label for="need">What do you need?</label>
+          <label for="need">Filter by service category</label>
           <select id="need"></select>
         </div>
       </div>
-      <p id="summary" role="status" aria-live="polite"></p>
+      <p id="summary" class="summary" role="status" aria-live="polite"></p>
       <div id="service-list" class="card-grid"></div>
       <p id="empty" class="empty" hidden>No services match your search. Try another keyword or choose "All needs".</p>
     </section>
 
-    <!-- Section 2: text directions and zone guide -->
-    <section id="directions" aria-labelledby="route-h">
-      <h2 id="route-h">Directions</h2>
+    <section id="directions" aria-labelledby="route-h" class="campus-directions">
+      <div class="section-heading">
+        <p class="eyebrow">Find your way</p>
+        <h2 id="route-h" class="site-heading">Campus directions</h2>
+        <p>Select a service to see its location and step-by-step directions.</p>
+      </div>
       <div class="field">
         <label for="dest">Where do you want to go?</label>
         <select id="dest"></select>
       </div>
-      <div id="route" class="route" role="status" aria-live="polite">Choose a service to see step-by-step directions.
-      </div>
-      <h3>Campus zone guide</h3>
+      <div id="route" class="route" role="status" aria-live="polite">Choose a service to see step-by-step directions.</div>
+      <h3 class="subheading">Campus zone guide</h3>
       <div class="zones">
         <article class="zone" data-zone="A">
           <h4>Zone A: Main Gate</h4>
@@ -68,18 +82,21 @@
       </div>
     </section>
 
-    <!-- Section 3: validated feedback form -->
     <section id="feedback" aria-labelledby="fb-h">
-      <h2 id="fb-h">Report wrong information</h2>
+      <div class="section-heading">
+        <p class="eyebrow">Help us improve</p>
+        <h2 id="fb-h" class="site-heading">Report incorrect information</h2>
+        <p>Tell us if a service's contact details, location or opening hours need updating.</p>
+      </div>
       <form id="feedback-form" novalidate>
         <div class="field">
-          <label for="fb-service">Which service is wrong?</label>
-          <select id="fb-service" required data-error="Choose the service with the wrong information."></select>
+          <label for="fb-service">Which service has incorrect information?</label>
+          <select id="fb-service" required data-error="Choose the service with the incorrect information."></select>
           <p class="error" id="fb-service-error"></p>
         </div>
         <div class="field">
-          <label for="fb-type">What is wrong?</label>
-          <select id="fb-type" required data-error="Choose what is wrong.">
+          <label for="fb-type">What information is incorrect?</label>
+          <select id="fb-type" required data-error="Choose what is incorrect.">
             <option value="">Choose one</option>
             <option>Phone or email</option>
             <option>Location</option>
@@ -89,28 +106,26 @@
           <p class="error" id="fb-type-error"></p>
         </div>
         <div class="field">
-          <label for="fb-email">Your email (so we can reply)</label>
-          <input type="email" id="fb-email" required placeholder="name@example.com"
-            data-error="Enter a valid email address.">
+          <label for="fb-email">Your email address</label>
+          <input type="email" id="fb-email" required placeholder="name@example.com" data-error="Enter a valid email address.">
           <p class="error" id="fb-email-error"></p>
         </div>
         <div class="field">
           <label for="fb-details">Describe the problem</label>
-          <textarea id="fb-details" rows="4" required minlength="10"
-            data-error="Write at least 10 characters."></textarea>
+          <textarea id="fb-details" rows="4" required minlength="10" data-error="Write at least 10 characters."></textarea>
           <p class="error" id="fb-details-error"></p>
         </div>
         <button type="submit">Send report</button>
         <p id="form-msg" class="msg" role="status" aria-live="polite"></p>
+        <p class="form-note">Demonstration form: reports are not sent to the university.</p>
       </form>
     </section>
   </main>
 
   <footer class="site-footer">
-    <p>&copy; 2026 ITM-1131 Group 2 project. All records are invented sample data.</p>
+    <p>&copy; 2026 Muni University Service Directory | ITM-1131 Group 2 project</p>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js" defer></script>
 </body>
-
 </html>

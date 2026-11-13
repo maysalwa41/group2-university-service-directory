@@ -1,4 +1,3 @@
-
 // ============================================================
 // MUNI UNIVERSITY SERVICE DIRECTORY
 // Sample service data (all invented).
@@ -20,6 +19,7 @@ const services = [
     close: 17,
     hours: "Mon-Fri, 8:00-17:00",
     purpose: "Transcripts, academic records and registration queries.",
+    image: "Administration Block.jpeg",
     directions: "Enter at the Main Gate and walk past the security booth. The Administration Block is the first building on your left. Registry is Room 4 on the ground floor."
   },
   {
@@ -36,6 +36,7 @@ const services = [
     close: 16,
     hours: "Mon-Fri, 8:00-16:00",
     purpose: "Applications, admission letters and new student enquiries.",
+    image: "current admin.jpg",
     directions: "From the Main Gate go to the Administration Block on your left. Admissions is Room 7, next to the Registry."
   },
   {
@@ -68,6 +69,7 @@ const services = [
     close: 21,
     hours: "Mon-Sat, 8:00-21:00",
     purpose: "Books, study space, past papers and borrowing.",
+    image: "Libraryview.jpeg",
     directions: "From the Administration Block walk straight along the main road for about 200 metres. The Library is the large building on your right, before the ICT centre."
   },
   {
@@ -100,6 +102,7 @@ const services = [
     close: 20,
     hours: "Every day, 8:00-20:00",
     purpose: "First aid, basic treatment and referrals for students and staff.",
+    image: "university2 clinic.jpg",
     directions: "From the Main Gate follow the road to the student hostels. The Health Centre is the white building opposite the Student Guild office."
   },
   {
@@ -132,6 +135,7 @@ const services = [
     close: 24,
     hours: "Every day, 24 hours",
     purpose: "Emergencies, lost property and visitor access.",
+    image: "Entrance.jpeg",
     directions: "The Security Office is the booth right at the Main Gate, on the left side as you enter."
   }
 ];
@@ -295,10 +299,7 @@ function showDirections(id) {
         "Choose a service to see step-by-step directions.";
     }
 
-    if (destination) {
-      destination.value = "";
-    }
-
+    if (destination) destination.value = "";
     return;
   }
 
@@ -309,10 +310,24 @@ function showDirections(id) {
     }
   });
 
-  // Display directions
+  const imagePath =
+    typeof service.image === "string" && service.image.trim()
+      ? encodeURI(service.image)
+      : "";
+
+  // Display service details and photograph
   if (route) {
     route.innerHTML = `
       <h3>${service.name}</h3>
+
+      ${imagePath ? `
+        <img
+          src="${imagePath}"
+          alt="Photograph of ${service.building}"
+          class="service-image"
+          onerror="this.style.display='none'; console.error('Image not found:', this.src);"
+        >
+      ` : ""}
 
       <p>${service.directions}</p>
 
@@ -406,15 +421,13 @@ function initializeApp() {
   // Check that the main directory elements exist
   if (!searchInput || !needSelect || !serviceList) {
     console.error(
-      "Service Directory: one or more required HTML elements are missing. Check the IDs in your HTML."
+      "Service Directory: one or more required HTML elements are missing. Check the IDs in your HTML.",
+      { search: !!searchInput, need: !!needSelect, "service-list": !!serviceList }
     );
     return;
   }
 
-  // ----------------------------------------------------------
   // Populate the category dropdown
-  // ----------------------------------------------------------
-
   const needs = [...new Set(services.map(service => service.need))];
 
   needSelect.innerHTML =
@@ -423,46 +436,21 @@ function initializeApp() {
       <option value="${need}">${need}</option>
     `).join("");
 
-
-  // ----------------------------------------------------------
   // Prepare service dropdown options
-  // ----------------------------------------------------------
-
   const serviceOptions =
     '<option value="">Choose a service</option>' +
     services.map(service => `
       <option value="${service.id}">${service.name}</option>
     `).join("");
 
-  if (destinationSelect) {
-    destinationSelect.innerHTML = serviceOptions;
-  }
+  if (destinationSelect) destinationSelect.innerHTML = serviceOptions;
+  if (feedbackService) feedbackService.innerHTML = serviceOptions;
 
-  if (feedbackService) {
-    feedbackService.innerHTML = serviceOptions;
-  }
-
-
-  // ----------------------------------------------------------
-  // SEARCH: update results while the user types
-  // ----------------------------------------------------------
-
+  // Search and category filter
   searchInput.addEventListener("input", filterServices);
-
-
-  // ----------------------------------------------------------
-  // CATEGORY FILTER: update results when category changes
-  // ----------------------------------------------------------
-
   needSelect.addEventListener("change", filterServices);
 
-
-  // ----------------------------------------------------------
-  // FIND SERVICES BUTTON
-  // Supports a button with id="find-services"
-  // or data-action="find-services"
-  // ----------------------------------------------------------
-
+  // Find Services button (id="find-services" or data-action="find-services")
   const findButton =
     $("find-services") ||
     document.querySelector('[data-action="find-services"]');
@@ -474,11 +462,7 @@ function initializeApp() {
     });
   }
 
-
-  // ----------------------------------------------------------
-  // SEARCH FORM: also supports pressing Enter
-  // ----------------------------------------------------------
-
+  // Search form: pressing Enter
   const searchForm = $("search-form");
 
   if (searchForm) {
@@ -488,23 +472,14 @@ function initializeApp() {
     });
   }
 
-
-  // ----------------------------------------------------------
-  // DESTINATION DROPDOWN: show directions
-  // ----------------------------------------------------------
-
+  // Destination dropdown: show directions
   if (destinationSelect) {
     destinationSelect.addEventListener("change", event => {
       showDirections(event.target.value);
     });
   }
 
-
-  // ----------------------------------------------------------
-  // SERVICE CARD BUTTONS
-  // Event delegation keeps buttons working after re-rendering
-  // ----------------------------------------------------------
-
+  // Service card buttons (event delegation keeps them working after re-rendering)
   serviceList.addEventListener("click", event => {
     const button = event.target.closest("button[data-id]");
 
@@ -522,11 +497,7 @@ function initializeApp() {
     }
   });
 
-
-  // ----------------------------------------------------------
-  // FEEDBACK FORM
-  // ----------------------------------------------------------
-
+  // Feedback form
   if (feedbackForm) {
     feedbackForm.addEventListener("submit", submitFeedback);
 
@@ -537,11 +508,7 @@ function initializeApp() {
     });
   }
 
-
-  // ----------------------------------------------------------
-  // DISPLAY ALL SERVICES WHEN THE PAGE FIRST LOADS
-  // ----------------------------------------------------------
-
+  // Display all services when the page first loads
   filterServices();
 
   console.log("Muni University Service Directory is ready.");

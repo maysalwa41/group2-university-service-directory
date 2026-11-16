@@ -45,6 +45,10 @@
           <select id="need"></select>
         </div>
       </div>
+      <div class="toolbar">
+        <button type="button" id="find-services">Find services</button>
+        <button type="button" id="clear-search" class="button-secondary">Clear search</button>
+      </div>
       <p id="summary" class="summary" role="status" aria-live="polite"></p>
       <div id="service-list" class="card-grid"></div>
       <p id="empty" class="empty" hidden>No services match your search. Try another keyword or choose "All needs".</p>
@@ -115,7 +119,10 @@
           <textarea id="fb-details" rows="4" required minlength="10" data-error="Write at least 10 characters."></textarea>
           <p class="error" id="fb-details-error"></p>
         </div>
-        <button type="submit">Send report</button>
+        <div class="form-actions">
+          <button type="submit">Send report</button>
+          <button type="reset" id="reset-feedback" class="button-secondary">Clear form</button>
+        </div>
         <p id="form-msg" class="msg" role="status" aria-live="polite"></p>
         <p class="form-note">Demonstration form: reports are not sent to the university.</p>
       </form>

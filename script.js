@@ -1,6 +1,6 @@
+
 // ============================================================
 // MUNI UNIVERSITY SERVICE DIRECTORY
-// Sample service data (all invented).
 // Days: 0 = Sunday, 1 = Monday ... 6 = Saturday
 // ============================================================
 
@@ -86,6 +86,7 @@ const services = [
     close: 17,
     hours: "Mon-Fri, 8:00-17:00",
     purpose: "Student email, Wi-Fi access and portal login problems.",
+    image: "Entrance.jpeg",
     directions: "Walk past the Library and turn right. The ICT Centre is the glass-fronted building and the Helpdesk is Room 2 on the ground floor."
   },
   {
@@ -140,17 +141,7 @@ const services = [
   }
 ];
 
-
-// ============================================================
-// HELPER FUNCTION
-// ============================================================
-
 const $ = id => document.getElementById(id);
-
-
-// ============================================================
-// FUNCTION 1: CHECK WHETHER A SERVICE IS OPEN
-// ============================================================
 
 function isOpenNow(service, now = new Date()) {
   const currentHour = now.getHours() + now.getMinutes() / 60;
@@ -161,11 +152,6 @@ function isOpenNow(service, now = new Date()) {
     currentHour < service.close
   );
 }
-
-
-// ============================================================
-// FUNCTION 2: DISPLAY SERVICE CARDS
-// ============================================================
 
 function renderServices(list) {
   const serviceList = $("service-list");
@@ -201,7 +187,9 @@ function renderServices(list) {
 
           <li>
             <strong>Phone:</strong>
-            ${service.phone}
+            <a href="tel:${service.phone}">
+              ${service.phone}
+            </a>
           </li>
 
           <li>
@@ -225,11 +213,6 @@ function renderServices(list) {
   }
 }
 
-
-// ============================================================
-// FUNCTION 3: SUMMARISE SEARCH RESULTS
-// ============================================================
-
 function summariseResults(list) {
   const summary = $("summary");
 
@@ -240,11 +223,6 @@ function summariseResults(list) {
   summary.textContent =
     `${list.length} service(s) found, ${openCount} open now.`;
 }
-
-
-// ============================================================
-// FUNCTION 4: SEARCH AND FILTER SERVICES
-// ============================================================
 
 function filterServices() {
   const searchInput = $("search");
@@ -277,18 +255,12 @@ function filterServices() {
   summariseResults(results);
 }
 
-
-// ============================================================
-// FUNCTION 5: DISPLAY DIRECTIONS FOR A SELECTED SERVICE
-// ============================================================
-
 function showDirections(id) {
   const service = services.find(item => item.id === Number(id));
 
   const route = $("route");
   const destination = $("dest");
 
-  // Remove previous zone highlights
   document.querySelectorAll(".zone").forEach(zone => {
     zone.classList.remove("active");
   });
@@ -303,7 +275,6 @@ function showDirections(id) {
     return;
   }
 
-  // Highlight the correct zone
   document.querySelectorAll(".zone").forEach(zone => {
     if (zone.dataset.zone === service.zone) {
       zone.classList.add("active");
@@ -315,7 +286,6 @@ function showDirections(id) {
       ? encodeURI(service.image)
       : "";
 
-  // Display service details and photograph
   if (route) {
     route.innerHTML = `
       <h3>${service.name}</h3>
@@ -325,7 +295,6 @@ function showDirections(id) {
           src="${imagePath}"
           alt="Photograph of ${service.building}"
           class="service-image"
-          onerror="this.style.display='none'; console.error('Image not found:', this.src);"
         >
       ` : ""}
 
@@ -335,7 +304,20 @@ function showDirections(id) {
         <strong>Zone ${service.zone}:</strong>
         ${service.building}, ${service.room}.
       </p>
+
+      <p>
+        <strong>Contact:</strong>
+        <a href="tel:${service.phone}">${service.phone}</a>
+      </p>
     `;
+
+    const serviceImage = route.querySelector(".service-image");
+
+    if (serviceImage) {
+      serviceImage.addEventListener("error", () => {
+        serviceImage.hidden = true;
+      }, { once: true });
+    }
   }
 
   if (destination) {
@@ -343,28 +325,20 @@ function showDirections(id) {
   }
 }
 
-
-// ============================================================
-// FUNCTION 6: VALIDATE FEEDBACK FORM FIELDS
-// ============================================================
-
 function validateField(field) {
   const valid = field.checkValidity();
   const errorMessage = $(`${field.id}-error`);
 
   if (errorMessage) {
-    errorMessage.textContent = valid ? "" : field.dataset.error || "Please check this field.";
+    errorMessage.textContent = valid
+      ? ""
+      : field.dataset.error || "Please check this field.";
   }
 
   field.setAttribute("aria-invalid", String(!valid));
 
   return valid;
 }
-
-
-// ============================================================
-// FUNCTION 7: SUBMIT FEEDBACK
-// ============================================================
 
 function submitFeedback(event) {
   event.preventDefault();
@@ -396,19 +370,14 @@ function submitFeedback(event) {
 
   form.reset();
 
-  // Clear validation messages after successful submission
   form.querySelectorAll("[required]").forEach(field => {
     field.setAttribute("aria-invalid", "false");
 
     const errorMessage = $(`${field.id}-error`);
+
     if (errorMessage) errorMessage.textContent = "";
   });
 }
-
-
-// ============================================================
-// FUNCTION 8: INITIALISE THE APPLICATION
-// ============================================================
 
 function initializeApp() {
   const searchInput = $("search");
@@ -418,16 +387,19 @@ function initializeApp() {
   const feedbackService = $("fb-service");
   const feedbackForm = $("feedback-form");
 
-  // Check that the main directory elements exist
   if (!searchInput || !needSelect || !serviceList) {
     console.error(
-      "Service Directory: one or more required HTML elements are missing. Check the IDs in your HTML.",
-      { search: !!searchInput, need: !!needSelect, "service-list": !!serviceList }
+      "Service Directory: required HTML elements are missing.",
+      {
+        search: !!searchInput,
+        need: !!needSelect,
+        "service-list": !!serviceList
+      }
     );
+
     return;
   }
 
-  // Populate the category dropdown
   const needs = [...new Set(services.map(service => service.need))];
 
   needSelect.innerHTML =
@@ -436,21 +408,24 @@ function initializeApp() {
       <option value="${need}">${need}</option>
     `).join("");
 
-  // Prepare service dropdown options
   const serviceOptions =
     '<option value="">Choose a service</option>' +
     services.map(service => `
       <option value="${service.id}">${service.name}</option>
     `).join("");
 
-  if (destinationSelect) destinationSelect.innerHTML = serviceOptions;
-  if (feedbackService) feedbackService.innerHTML = serviceOptions;
+  if (destinationSelect) {
+    destinationSelect.innerHTML = serviceOptions;
+  }
 
-  // Search and category filter
+  if (feedbackService) {
+    feedbackService.innerHTML = serviceOptions;
+  }
+
   searchInput.addEventListener("input", filterServices);
+
   needSelect.addEventListener("change", filterServices);
 
-  // Find Services button (id="find-services" or data-action="find-services")
   const findButton =
     $("find-services") ||
     document.querySelector('[data-action="find-services"]');
@@ -459,10 +434,14 @@ function initializeApp() {
     findButton.addEventListener("click", event => {
       event.preventDefault();
       filterServices();
+
+      serviceList.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
     });
   }
 
-  // Search form: pressing Enter
   const searchForm = $("search-form");
 
   if (searchForm) {
@@ -472,14 +451,12 @@ function initializeApp() {
     });
   }
 
-  // Destination dropdown: show directions
   if (destinationSelect) {
     destinationSelect.addEventListener("change", event => {
       showDirections(event.target.value);
     });
   }
 
-  // Service card buttons (event delegation keeps them working after re-rendering)
   serviceList.addEventListener("click", event => {
     const button = event.target.closest("button[data-id]");
 
@@ -497,7 +474,19 @@ function initializeApp() {
     }
   });
 
-  // Feedback form
+  const clearSearchButton = $("clear-search");
+
+  if (clearSearchButton) {
+    clearSearchButton.addEventListener("click", () => {
+      searchInput.value = "";
+      needSelect.value = "all";
+
+      filterServices();
+
+      searchInput.focus();
+    });
+  }
+
   if (feedbackForm) {
     feedbackForm.addEventListener("submit", submitFeedback);
 
@@ -506,18 +495,31 @@ function initializeApp() {
         validateField(event.target);
       }
     });
+
+    feedbackForm.addEventListener("reset", () => {
+      window.setTimeout(() => {
+        feedbackForm.querySelectorAll("[required]").forEach(field => {
+          field.setAttribute("aria-invalid", "false");
+
+          const errorMessage = $(`${field.id}-error`);
+
+          if (errorMessage) errorMessage.textContent = "";
+        });
+
+        const message = $("form-msg");
+
+        if (message) {
+          message.textContent = "";
+          message.className = "msg";
+        }
+      }, 0);
+    });
   }
 
-  // Display all services when the page first loads
   filterServices();
 
   console.log("Muni University Service Directory is ready.");
 }
-
-
-// ============================================================
-// START THE APPLICATION AFTER THE HTML HAS LOADED
-// ============================================================
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initializeApp);

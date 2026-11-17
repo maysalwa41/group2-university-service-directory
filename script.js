@@ -53,6 +53,7 @@ const services = [
     close: 16,
     hours: "Mon-Fri, 8:00-16:00",
     purpose: "Tuition balances, payment confirmation and fee statements.",
+    image: "current admin.jpg",
     directions: "Enter the Administration Block, take the stairs on the right to the first floor, and Room 12 is at the end of the corridor."
   },
   {

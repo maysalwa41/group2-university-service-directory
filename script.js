@@ -87,7 +87,7 @@ const services = [
     close: 17,
     hours: "Mon-Fri, 8:00-17:00",
     purpose: "Student email, Wi-Fi access and portal login problems.",
-    image: "Entrance.jpeg",
+    image: "ICT office.jpg",
     directions: "Walk past the Library and turn right. The ICT Centre is the glass-fronted building and the Helpdesk is Room 2 on the ground floor."
   },
   {
@@ -121,6 +121,7 @@ const services = [
     close: 17,
     hours: "Mon-Fri, 9:00-17:00",
     purpose: "Student representation, clubs, events and welfare concerns.",
+    image: "guild office.jpg",
     directions: "Follow the road towards the hostels. The Student Centre is on your left and the Guild is Room 1 at the entrance."
   },
   {

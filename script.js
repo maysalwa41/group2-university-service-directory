@@ -2,6 +2,7 @@
 // ============================================================
 // MUNI UNIVERSITY SERVICE DIRECTORY
 // Days: 0 = Sunday, 1 = Monday ... 6 = Saturday
+// Services: Registry, Admission Office, Finance and fees, Library, Ict Help desk, Health Unit, student guild and security
 // ============================================================
 
 const services = [

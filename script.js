@@ -365,21 +365,13 @@ function submitFeedback(event) {
     return;
   }
 
+  form.reset();
+
   if (message) {
     message.className = "msg success";
     message.textContent =
       "Thank you. Your report has been recorded (sample only, nothing is sent).";
   }
-
-  form.reset();
-
-  form.querySelectorAll("[required]").forEach(field => {
-    field.setAttribute("aria-invalid", "false");
-
-    const errorMessage = $(`${field.id}-error`);
-
-    if (errorMessage) errorMessage.textContent = "";
-  });
 }
 
 function initializeApp() {
@@ -500,22 +492,20 @@ function initializeApp() {
     });
 
     feedbackForm.addEventListener("reset", () => {
-      window.setTimeout(() => {
-        feedbackForm.querySelectorAll("[required]").forEach(field => {
-          field.setAttribute("aria-invalid", "false");
+      feedbackForm.querySelectorAll("[required]").forEach(field => {
+        field.setAttribute("aria-invalid", "false");
 
-          const errorMessage = $(`${field.id}-error`);
+        const errorMessage = $(`${field.id}-error`);
 
-          if (errorMessage) errorMessage.textContent = "";
-        });
+        if (errorMessage) errorMessage.textContent = "";
+      });
 
-        const message = $("form-msg");
+      const message = $("form-msg");
 
-        if (message) {
-          message.textContent = "";
-          message.className = "msg";
-        }
-      }, 0);
+      if (message) {
+        message.textContent = "";
+        message.className = "msg";
+      }
     });
   }
 
